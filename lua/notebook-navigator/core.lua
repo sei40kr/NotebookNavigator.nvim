@@ -144,7 +144,13 @@ end
 M.add_cell_below = function(cell_marker)
   local cell_object = miniai_spec("a", cell_marker)
 
-  vim.api.nvim_buf_set_lines(0, cell_object.to.line, cell_object.to.line, false, { cell_marker, "" })
+  vim.api.nvim_buf_set_lines(0, cell_object.to.line, cell_object.to.line, false, { cell_marker, "", "" })
+
+  -- Ensure a blank line between cells
+  if vim.api.nvim_buf_get_lines(0, cell_object.to.line - 1, cell_object.to.line, false)[1] ~= "" then
+    vim.api.nvim_buf_set_lines(0, cell_object.to.line, cell_object.to.line, false, { "" })
+  end
+
   M.move_cell("d", cell_marker)
 end
 
@@ -158,7 +164,7 @@ M.add_cell_above = function(cell_marker)
     cell_object.from.line - 1,
     cell_object.from.line - 1,
     false,
-    { cell_marker, "" }
+    { cell_marker, "", "" }
   )
   M.move_cell("u", cell_marker)
 end

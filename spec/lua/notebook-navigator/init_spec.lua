@@ -189,4 +189,62 @@ describe("init", function()
       assert.are.same(expected, actual)
     end)
   end)
+
+  describe("add_cell_below", function()
+    before_each(function()
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, {
+        "# %%",
+        "print('hello world')",
+      })
+
+      vim.api.nvim_win_set_cursor(0, { 1, 0 })
+    end)
+
+    it("should add a cell below the current cell", function()
+      M.add_cell_below()
+      local actual = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      local expected = {
+        "# %%",
+        "print('hello world')",
+        "",
+        "# %%",
+        "",
+        "",
+      }
+
+      assert.are.same(expected, actual)
+    end)
+
+    it("should move to the start of the new cell", function()
+      M.add_cell_below()
+      local actual = vim.api.nvim_win_get_cursor(0)[1]
+      local expected = 4
+
+      assert.are.same(expected, actual)
+    end)
+  end)
+
+  describe("add_cell_above", function()
+    before_each(function()
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, {
+        "# %%",
+        "print('hello world')",
+      })
+      vim.api.nvim_win_set_cursor(0, { 2, 0 })
+    end)
+
+    it("should add a cell above the current cell", function()
+      M.add_cell_above()
+      local actual = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      local expected = {
+        "# %%",
+        "",
+        "",
+        "# %%",
+        "print('hello world')",
+      }
+
+      assert.are.same(expected, actual)
+    end)
+  end)
 end)
